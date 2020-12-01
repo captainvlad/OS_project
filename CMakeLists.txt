@@ -12,7 +12,7 @@ add_library(analysis SHARED
         inc/database_manipulation.h
         src/database_manipulation.cpp
         src/tests.cpp
-        inc/tests.h inc/welcome_screen.h inc/info_screen.h inc/explore_screen.h)
+        inc/tests.h inc/welcome_screen.h inc/info_screen.h inc/explore_screen.h inc/processes_screen.h inc/cpu_screen.h)
 
 add_executable(Solo src/main.cpp)
 target_link_libraries(Solo analysis)

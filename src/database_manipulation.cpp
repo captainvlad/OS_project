@@ -17,7 +17,7 @@ std::string CPU_TABLE = "cpu";
 std::string FILES_TABLE = "files";
 std::string MEMORY_TABLE = "memory";
 
-std::string PROCESSES_TABLE_FIELDS = "(running_processes TEXT, blocked_processes TEXT, open_processes TEXT, forks_since_boot TEXT)";
+std::string PROCESSES_TABLE_FIELDS = "(cpu_amount TEXT, cpu_vendor_id TEXT, open_processes TEXT, last_level_cache_size TEXT)";
 std::string CPU_TABLE_FIELDS = "(cpu_utilization TEXT, cpu_usage TEXT)";
 std::string FILES_TABLE_FIELDS = "(allocated_descriptors TEXT, free_descriptors TEXT)";
 std::string MEMORY_TABLE_FIELDS = "(cached_ram TEXT, active_ram TEXT, inactive_ram TEXT, dirty_ram TEXT, used_virtual_ram TEXT)";
@@ -143,7 +143,7 @@ void update_processes_table() {
     auto open_processes = std::to_string(get_total_open_processes_amount());
     auto forks_since_boot = std::to_string(get_forks_since_boot());
 
-    std::string arguments = " ('running_processes', 'blocked_processes', 'open_processes', 'forks_since_boot') VALUES ('" + running_process + "','" + blocked_processes + "','" + open_processes + "','" + forks_since_boot + "')";
+    std::string arguments = " ('cpu_amount', 'cpu_vendor_id', 'open_processes', 'last_level_cache_size') VALUES ('" + running_process + "','" + blocked_processes + "','" + open_processes + "','" + forks_since_boot + "')";
 
     auto db = open_database();
     insert_in_table(db, PROCESSES_TABLE, arguments);
