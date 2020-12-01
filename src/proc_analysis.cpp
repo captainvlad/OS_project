@@ -10,7 +10,6 @@
 #include <cmath>
 #include <filesystem>
 
-
 int get_running_processes_amount() {
     return proc_stat_manager(std::string("procs_running") );
 }

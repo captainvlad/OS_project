@@ -23,7 +23,6 @@ int get_context_switches();
 std::vector<std::string> get_cpu_n_stat(std::string n = "");
 std::vector<std::string> get_cpu_stat(int i);
 
-int get_cpu_amount();
 std::vector<std::string> files_manager();
 
 int get_total_allocated_descriptors();
@@ -32,6 +31,7 @@ int get_total_free_descriptors();
 long get_open_descriptors_limit();
 std::vector<std::string> cpu_info_manager(std::string substring_to_find);
 
+int get_cpu_amount();
 std::string get_cpu_vendor_id();
 std::string get_cpu_model_name();
 

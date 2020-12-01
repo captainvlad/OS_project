@@ -2,6 +2,7 @@
 // Created by vlad on 01.11.20.
 //
 #include <iostream>
+#include <sys/stat.h>
 #include "utils.h"
 
 bool contains(std::string* str, std::string* substr) {
