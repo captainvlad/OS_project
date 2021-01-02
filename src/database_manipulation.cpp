@@ -6,9 +6,6 @@
 #include "proc_analysis.h"
 #include <sys/stat.h>
 #include <iostream>
-#include <iterator>
-#include <sstream>
-#include <utils.h>
 
 std::string DATABASE_NAME = "local_database.db";
 
@@ -189,4 +186,11 @@ void update_memory_table() {
     auto db = open_database();
     insert_in_table(db, MEMORY_TABLE, arguments);
     close_database(db);
+}
+
+void update_all_tables() {
+    update_cpu_table();
+    update_files_table();
+    update_memory_table();
+    update_processes_table();
 }

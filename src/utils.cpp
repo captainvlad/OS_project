@@ -1,8 +1,6 @@
 //
 // Created by vlad on 01.11.20.
 //
-#include <iostream>
-#include <sys/stat.h>
 #include "utils.h"
 
 bool contains(std::string* str, std::string* substr) {
@@ -42,6 +40,18 @@ bool is_process_dir(std::string arg) {
 
     for (auto ch: new_string) {
         result &= isdigit(ch);
+    }
+
+    return result;
+}
+
+std::vector<double> parseCPUusage(std::string values) {
+    std::vector<double> result;
+
+    for (int i = 0; i < values.size(); i++) {
+        if (values[i] == '%') {
+            result.push_back(std::stod(values.substr(i - 3, 3)));
+        }
     }
 
     return result;

@@ -17,7 +17,7 @@ add_library(analysis SHARED
         inc/database_manipulation.h
         src/database_manipulation.cpp
         src/tests.cpp
-        inc/tests.h inc/welcome_screen.h inc/info_screen.h inc/explore_screen.h inc/processes_screen.h inc/cpu_screen.h inc/Screen.h inc/Screen_listeners.h inc/Screen_inits.h inc/Screen_preparations.h inc/Screen_manipulations.h inc/Screen_graphs_maker.h)
+        inc/tests.h inc/Screen.h inc/Screen_listeners.h inc/Screen_inits.h inc/Screen_preparations.h inc/Screen_manipulations.h inc/Screen_graphs_maker.h)
 
 set(CMAKE_AUTOMOC ON)
 QT5_WRAP_UI( UI_HDRS ${UI_FILES} )

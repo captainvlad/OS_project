@@ -28,7 +28,7 @@
             init_explore_window();
         }
 
-        grapghIsUsed = false;
+        graph_is_used = false;
     }
 
     void Screen::OnExplore() {
@@ -52,13 +52,15 @@
     }
 
     void Screen::OnRemoveGraph() {
-        grapghIsUsed = false;
+        graph_is_used = false;
     }
 
     void Screen::clear_database_and_quit() {
-        workerThread->terminate();
-        clear_all_tables();
-        QApplication::quit();
+        close_program = true;
+    }
+
+    void Screen::onProgressChanged(QString info) {
+        update_current_window();
     }
 
     void Screen::quit() {

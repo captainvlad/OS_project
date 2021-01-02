@@ -82,6 +82,7 @@ void Screen::prepare_back_button() {
 }
 
 void Screen::prepare_description() {
+
     description_label->setText(description_text);
     QFont font = description_label->font();
     font.setPointSize(36);
@@ -95,6 +96,8 @@ void Screen::prepare_description() {
 }
 
 void Screen::prepare_window() {
+    QString title = "GUI STATS";
+
     setWindowState(Qt::WindowMaximized);
     setWindowTitle(title);
 }
@@ -392,7 +395,7 @@ void Screen::prepare_last_level_cache_size() {
     last_level_cache_size_label->setText(QString::fromStdString(value));
 
     last_level_cache_size_label->setFixedHeight(50);
-    last_level_cache_size_label->move(800, 400);
+    last_level_cache_size_label->move(300, 525);
     last_level_cache_size_label->setAlignment(Qt::AlignCenter);
 }
 
@@ -406,7 +409,7 @@ void Screen::prepare_cpu_bogomips() {
     cpu_bogomips_label->setText(QString::fromStdString(value));
 
     cpu_bogomips_label->setFixedHeight(50);
-    cpu_bogomips_label->move(800, 500);
+    cpu_bogomips_label->move(500, 600);
     cpu_bogomips_label->setAlignment(Qt::AlignCenter);
 }
 
@@ -466,7 +469,7 @@ void Screen::prepare_chartview() {
     chartView->setRenderHint(QPainter::Antialiasing);
     chartView->setFixedSize(800, 400);
 
-    chartView->move(1000, 400);
+    chartView->move(1000, 350);
 }
 
 void Screen::prepare_yes_no_clear_buttons() {

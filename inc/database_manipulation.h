@@ -28,6 +28,7 @@ void update_cpu_table();
 void update_files_table();
 
 void update_memory_table();
-inline bool database_exists (const std::string& name);
+void update_all_tables();
 
+inline bool database_exists (const std::string& name);
 #endif //SOLO_DATABASE_MANIPULATION_H

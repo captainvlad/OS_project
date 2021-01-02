@@ -15,17 +15,13 @@ Q_OBJECT
         while(1) {
             sleep(1);
 
-            update_cpu_table();
-            update_files_table();
-            update_memory_table();
-            update_processes_table();
-
-            emit progressChanged("Update message");
+            update_all_tables();
+            emit process_changed("Update message");
         }
     }
-    // Define signal:
+
 signals:
-    void progressChanged(QString info);
+    void process_changed(QString info);
 };
 
 class Screen : public QWidget {
@@ -38,38 +34,42 @@ public:
 
         connect(info_button, SIGNAL(clicked()), this, SLOT(OnInfo()));
         connect(quit_button, SIGNAL(clicked()), this, SLOT(OnQuit()));
+
         connect(back_button, SIGNAL(clicked()), this, SLOT(OnBack()));
         connect(explore_button, SIGNAL(clicked()), this, SLOT(OnExplore()));
+
         connect(processes_button, SIGNAL(clicked()), this, SLOT(OnProcesses()));
         connect(cpu_button, SIGNAL(clicked()), this, SLOT(OnCPU()));
+
         connect(filesystem_button, SIGNAL(clicked()), this, SLOT(OnFilesystem()));
         connect(memory_button, SIGNAL(clicked()), this, SLOT(OnMemory()));
-
-        connect(cpu_utilization_label, SIGNAL(clicked()), this, SLOT(createCpuUtilizationGraph()));
-        connect(running_processes_label, SIGNAL(clicked()), this, SLOT(createRunningProcessesGraph()));
-        connect(open_processes_label, SIGNAL(clicked()), this, SLOT(createOpenProcessesGraph()));
-
-        connect(forks_since_boot_label, SIGNAL(clicked()), this, SLOT(createForksSinceBoot()));
-        connect(time_since_boot_label, SIGNAL(clicked()), this, SLOT(createTimeSinceBoot()));
-
-        connect(allocated_descriptors_label, SIGNAL(clicked()), this, SLOT(createAllocatedDescriptors()));
-        connect(free_descriptors_label, SIGNAL(clicked()), this, SLOT(createFreeDescriptors()));
-
-        connect(active_ram, SIGNAL(clicked()), this, SLOT(createActiveRamSize()));connect(active_ram, SIGNAL(clicked()), this, SLOT(createActiveRamSize()));
-        connect(available_ram_size_label, SIGNAL(clicked()), this, SLOT(createAvailibleRamSize()));
-        connect(cached_ram_size_label, SIGNAL(clicked()), this, SLOT(createCachedRamSize()));
-        connect(inactive_ram, SIGNAL(clicked()), this, SLOT(createInactiveRamSize()));
-        connect(dirty_ram, SIGNAL(clicked()), this, SLOT(createDirtyRamSize()));
-
-        connect(cpu_usage_label, SIGNAL(clicked()), this, SLOT(createCPUusageGraph()));
-
-        connect(remove_graph_button, SIGNAL(clicked()), this, SLOT(OnRemoveGraph()));
 
         connect(clear_database_button, SIGNAL(clicked()), this, SLOT(clear_database_and_quit()));
         connect(no_clear_database_button, SIGNAL(clicked()), this, SLOT(quit()));
 
+        connect(cpu_utilization_label, SIGNAL(clicked()), this, SLOT(createCpuUtilizationGraph()));
+        connect(running_processes_label, SIGNAL(clicked()), this, SLOT(createRunningProcessesGraph()));
+
+        connect(open_processes_label, SIGNAL(clicked()), this, SLOT(createOpenProcessesGraph()));
+        connect(forks_since_boot_label, SIGNAL(clicked()), this, SLOT(createForksSinceBoot()));
+
+        connect(time_since_boot_label, SIGNAL(clicked()), this, SLOT(createTimeSinceBoot()));
+        connect(allocated_descriptors_label, SIGNAL(clicked()), this, SLOT(createAllocatedDescriptors()));
+
+        connect(free_descriptors_label, SIGNAL(clicked()), this, SLOT(createFreeDescriptors()));
+        connect(active_ram, SIGNAL(clicked()), this, SLOT(createActiveRamSize()));connect(active_ram, SIGNAL(clicked()), this, SLOT(createActiveRamSize()));
+
+        connect(available_ram_size_label, SIGNAL(clicked()), this, SLOT(createAvailibleRamSize()));
+        connect(cached_ram_size_label, SIGNAL(clicked()), this, SLOT(createCachedRamSize()));
+
+        connect(inactive_ram, SIGNAL(clicked()), this, SLOT(createInactiveRamSize()));
+        connect(dirty_ram, SIGNAL(clicked()), this, SLOT(createDirtyRamSize()));
+
+        connect(cpu_usage_label, SIGNAL(clicked()), this, SLOT(createCPUusageGraph()));
+        connect(remove_graph_button, SIGNAL(clicked()), this, SLOT(OnRemoveGraph()));
+
         initialize_database_and_tables();
-        startWorkInAThread();
+        start_work_in_thread();
     }
 
     ~Screen(){}
@@ -102,30 +102,29 @@ private slots:
 
     void createAvailibleRamSize();
     void createCachedRamSize();
+
     void createActiveRamSize();
     void createInactiveRamSize();
-    void createDirtyRamSize();
 
+    void createDirtyRamSize();
     void createCPUusageGraph();
 
     void clear_database_and_quit();
     void quit();
 
-    void onProgressChanged(QString info) {
-        update_current_window();
-    }
+    void onProgressChanged(QString info);
 private:
-    bool grapghIsUsed = false;
+    bool graph_is_used = false;
+    bool close_program = false;
+
+    std::string graph_title = "-";
+    std::string table_name = "-";
+    std::string column_name = "-";
 
 //  Text and other constants to be used later
     WorkerThread *workerThread;
     QRect rec = QApplication::desktop()->screenGeometry();
 
-    std::string graph_title = "";
-    std::string table_name = "";
-    std::string column_name = "";
-
-    QString title = "GUI STATS";
     QString description_text = "This program is designed to present the user information\n"
                                "about system, using /proc information. Using the program,\n you can get info on:"
                                "\n\n -CPU \n -Processes \n -Files \n -Memory ";
@@ -134,13 +133,19 @@ private:
     QLabel* headline_label = new QLabel(this);
     QLabel* description_label = new QLabel(this);
 
+//    Charts to be used in the application
+    QtCharts::QChart *chart = new QtCharts::QChart();
+    QtCharts::QChartView *chartView = new QtCharts::QChartView(chart, this);
+
 //  Buttons to be used in the application
     QPushButton* info_button = new QPushButton("Info", this);
     QPushButton* quit_button = new QPushButton("Quit", this);
     QPushButton* back_button = new QPushButton("Back", this);
     QPushButton* cpu_button = new QPushButton("CPU stats", this);
     QPushButton* explore_button = new QPushButton("Explore", this);
+    QPushButton* clear_database_button = new QPushButton("Yes", this);
     QPushButton* memory_button = new QPushButton("Memory stats", this);
+    QPushButton* no_clear_database_button = new QPushButton("No", this);
     QPushButton* processes_button = new QPushButton("Processes stats", this);
     QPushButton* remove_graph_button = new QPushButton("Remove graph", this);
     QPushButton* filesystem_button = new QPushButton("Filesystem stats", this);
@@ -153,13 +158,13 @@ private:
 
 //  Labels needed for 'CPU' screen
     QLabel* cpu_bugs_label = new QLabel(this);
-    QPushButton* cpu_usage_label = new QPushButton(this);
     QLabel* cpu_amount_label = new QLabel(this);
     QLabel* cpu_bogomips_label = new QLabel(this);
     QLabel* cpu_vendor_id_label = new QLabel(this);
     QLabel* cpu_model_name_label = new QLabel(this);
-    QPushButton* cpu_utilization_label = new QPushButton(this);
+    QPushButton* cpu_usage_label = new QPushButton(this);
     QLabel* last_level_cache_size_label = new QLabel(this);
+    QPushButton* cpu_utilization_label = new QPushButton(this);
 
 //  Labels needed for 'Filesystem' screen
     QLabel* open_descriptors_limit = new QLabel(this);
@@ -167,18 +172,12 @@ private:
     QPushButton* allocated_descriptors_label = new QPushButton(this);
 
 //  Labels needed for 'Memory' screen
+    QLabel* ram_size_label = new QLabel(this);
     QPushButton* dirty_ram = new QPushButton(this);
     QPushButton* active_ram = new QPushButton(this);
     QPushButton* inactive_ram = new QPushButton(this);
-    QLabel* ram_size_label = new QLabel(this);
     QPushButton* cached_ram_size_label = new QPushButton(this);
     QPushButton* available_ram_size_label = new QPushButton(this);
-
-    QtCharts::QChart *chart = new QtCharts::QChart();
-    QtCharts::QChartView *chartView = new QtCharts::QChartView(chart, this);
-
-    QPushButton* clear_database_button = new QPushButton("Yes", this);
-    QPushButton* no_clear_database_button = new QPushButton("No", this);
 
     //  Functions responsible for windows initializing, are defined in "Screen_inits.h" file
     void init_welcome_window();
@@ -251,7 +250,8 @@ private:
 
 //  Methods for manipulations with screens, defined in "Screen_manipulations.h"
     void hide_all_items();
-    void startWorkInAThread();
+    void start_work_in_thread();
+
     void update_current_window();
     void createGraph(std::string title, std::string table_name, std::string column_name);
 };

@@ -108,18 +108,6 @@ void Screen::createCPUusageGraph() {
     table_name = "cpu";
     column_name = "cpu_usage_label";
 
-//    auto database_connection = open_database();
-//    auto info = select_from_database(database_connection, 0, "SELECT " + column_name + " from " + table_name + ";");
-//    close_database(database_connection);
-//
-//    for (auto x: info) {
-//        std::cout << "Item: " << x << "\n";
-//
-//        for (auto xx: parseCPUusage(x)) {
-//            std::cout << xx << "\n";
-//        }
-//    }
-
     createGraph(graph_title, table_name, column_name);
 }
 

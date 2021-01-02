@@ -14,4 +14,6 @@ void split_string(std::string &txt, std::vector<std::string> &parts, char ch);
 int findLastIndex(std::string& str, char x);
 bool is_process_dir(std::string arg);
 
+std::vector<double> parseCPUusage(std::string values);
+
 #endif //SOLO_UTILS_H

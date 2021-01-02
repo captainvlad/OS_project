@@ -5,7 +5,9 @@
 #ifndef SOLO_SCREEN_MANIPULATIONS_H
 #define SOLO_SCREEN_MANIPULATIONS_H
 
+#include <iostream>
 #include "Screen.h"
+#include "utils.h"
 #include "database_manipulation.h"
 
 void Screen::update_current_window() {
@@ -24,8 +26,14 @@ void Screen::update_current_window() {
         init_memory_window();
     }
 
-    if (grapghIsUsed) {
+    if (graph_is_used) {
         createGraph(graph_title, table_name, column_name);
+    }
+
+    if (close_program) {
+        workerThread->terminate();
+        clear_all_tables();
+        QApplication::quit();
     }
 }
 
@@ -72,27 +80,15 @@ void Screen::hide_all_items() {
     clear_database_button->setVisible(false);
 }
 
-void Screen::startWorkInAThread() {
+void Screen::start_work_in_thread() {
     workerThread = new WorkerThread();
-    connect(workerThread, SIGNAL(progressChanged(QString)), SLOT(onProgressChanged(QString)));
+    connect(workerThread, SIGNAL(process_changed(QString)), SLOT(onProgressChanged(QString)));
 
     workerThread->start();
 }
 
-std::vector<double> parseCPUusage(std::string values) {
-    std::vector<double> result;
-
-    for (int i = 0; i < values.size(); i++) {
-        if (values[i] == '%') {
-            result.push_back(std::stod(values.substr(i - 3, 3)));
-        }
-    }
-
-    return result;
-}
-
 void Screen::createGraph(std::string title, std::string table_name, std::string column_name) {
-    grapghIsUsed = true;
+    graph_is_used = true;
     remove_graph_button->setVisible(true);
     chartView->setVisible(true);
 
@@ -103,7 +99,6 @@ void Screen::createGraph(std::string title, std::string table_name, std::string 
     auto info = select_from_database(database_connection, 0, "SELECT " + column_name + " from " + table_name + ";");
 
     int i = 0;
-    close_database(database_connection);
 
     if (column_name == "cpu_usage_label") {
         QtCharts::QLineSeries *series2 = new QtCharts::QLineSeries();
@@ -136,6 +131,7 @@ void Screen::createGraph(std::string title, std::string table_name, std::string 
         chart->setTitle(QString().fromStdString(title));
         chartView->setRenderHint(QPainter::Antialiasing);
 
+        close_database(database_connection);
         return;
     }
 
@@ -149,6 +145,8 @@ void Screen::createGraph(std::string title, std::string table_name, std::string 
 
     chart->setTitle(QString().fromStdString(title));
     chartView->setRenderHint(QPainter::Antialiasing);
+
+    close_database(database_connection);
 }
 
 #endif //SOLO_SCREEN_MANIPULATIONS_H
