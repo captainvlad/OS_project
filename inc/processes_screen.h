@@ -11,7 +11,7 @@ class ProcessesScreen {
 public:
     QLabel* label;
     QLabel* running_processes;
-//    QLabel* cpu_vendor_id;
+//    QLabel* cpu_vendor_id_label;
     QLabel* open_processes;
     QLabel* forks_since_boot;
     QLabel* time_since_boot;
@@ -25,7 +25,7 @@ public:
         running_processes = new QLabel(window);
         back_button = new QPushButton(window);
 
-//        cpu_vendor_id = new QLabel(window);
+//        cpu_vendor_id_label = new QLabel(window);
         open_processes = new QLabel(window);
 
         forks_since_boot = new QLabel(window);
@@ -91,15 +91,15 @@ public:
 //        std::string value = "Total blocked processes number: " +
 //                            std::to_string(get_blocked_processes_amount());
 //
-//        QFont font = cpu_vendor_id->font();
+//        QFont font = cpu_vendor_id_label->font();
 //        font.setPointSize(26);
 //
-//        cpu_vendor_id->setFont(font);
-//        cpu_vendor_id->setText(QString::fromStdString(value));
+//        cpu_vendor_id_label->setFont(font);
+//        cpu_vendor_id_label->setText(QString::fromStdString(value));
 //
-//        cpu_vendor_id->setFixedHeight(200);
-//        cpu_vendor_id->move(100, 500);
-//        cpu_vendor_id->setAlignment(Qt::AlignCenter);
+//        cpu_vendor_id_label->setFixedHeight(200);
+//        cpu_vendor_id_label->move(100, 500);
+//        cpu_vendor_id_label->setAlignment(Qt::AlignCenter);
 //    }
 
     void prepare_open_processes() {

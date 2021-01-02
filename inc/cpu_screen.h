@@ -15,7 +15,7 @@ public:
     QLabel* cpu_model_name;
     QLabel* last_level_cache_size;
     QLabel* cpu_bogomips;
-//    QLabel* cpu_bugs;
+//    QLabel* cpu_bugs_label;
 
     QLabel* cpu_utilization;
     QLabel* cpu_usage;
@@ -36,7 +36,7 @@ public:
         last_level_cache_size = new QLabel(window);
         cpu_bogomips = new QLabel(window);
 
-//        cpu_bugs = new QLabel(window);
+//        cpu_bugs_label = new QLabel(window);
         cpu_utilization = new QLabel(window);
         cpu_usage = new QLabel(window);
 
@@ -157,14 +157,14 @@ public:
 //    void prepare_cpu_bugs() {
 //        std::string value = "CPU bugs: \n\t" + get_cpu_bugs();
 //
-//        QFont font = cpu_bugs->font();
+//        QFont font = cpu_bugs_label->font();
 //        font.setPointSize(26);
 //
-//        cpu_bugs->setFont(font);
-//        cpu_bugs->setText(QString::fromStdString(value));
+//        cpu_bugs_label->setFont(font);
+//        cpu_bugs_label->setText(QString::fromStdString(value));
 //
-//        cpu_bugs->setFixedHeight(200);
-//        cpu_bugs->move(100, 475);
+//        cpu_bugs_label->setFixedHeight(200);
+//        cpu_bugs_label->move(100, 475);
 //    }
 
     void prepare_cpu_utilization() {
